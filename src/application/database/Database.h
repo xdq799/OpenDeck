@@ -23,6 +23,8 @@ limitations under the License.
 class Database : public LESSDB
 {
     public:
+    static constexpr uint32_t MAX_CUSTOM_SYSEX_BYTES = 1024;
+
     class Handlers
     {
         public:
@@ -48,6 +50,7 @@ class Database : public LESSDB
         leds,
         display,
         touchscreen,
+        customSysEx,
         AMOUNT
     };
 
