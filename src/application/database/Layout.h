@@ -25,7 +25,7 @@ limitations under the License.
 #include "system/System.h"
 #include "io/display/Config.h"
 
-#define MAX_PRESETS 10
+#define MAX_PRESETS 5
 
 namespace SectionPrivate
 {
