@@ -66,6 +66,7 @@ namespace IO
             multiValIncDecNote,
             multiValIncResetCC,
             multiValIncDecCC,
+            customSysEx,
             AMOUNT
         };
 

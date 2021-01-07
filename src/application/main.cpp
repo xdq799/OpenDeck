@@ -34,6 +34,7 @@ limitations under the License.
 #include "io/common/CInfo.h"
 #include "board/common/USBMIDIOverSerial/USBMIDIOverSerial.h"
 #include "bootloader/FwSelector/FwSelector.h"
+#include "sysex/SysEx.h"
 
 class DBhandlers : public Database::Handlers
 {
@@ -551,6 +552,7 @@ class SystemHWA : public System::HWA
 } hwaSystem;
 
 MIDI            midi(hwaMIDI);
+SysEx           sysEx(database, midi);
 ComponentInfo   cinfo;
 IO::U8X8        u8x8(hwaU8X8);
 IO::Display     display(u8x8, database);

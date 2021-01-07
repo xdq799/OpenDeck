@@ -536,7 +536,7 @@ namespace
         },
     };
 
-    LESSDB::section_t customSysExSections[1] = {
+    LESSDB::section_t customSysExSections[static_cast<uint8_t>(Database::Section::customSysEx_t::AMOUNT)] = {
         //bytes section
         {
             .numberOfParameters     = Database::MAX_CUSTOM_SYSEX_BYTES,
@@ -607,7 +607,7 @@ namespace
 
         //custom sysex block
         {
-            .numberOfSections = 1,
+            .numberOfSections = static_cast<uint8_t>(Database::Section::customSysEx_t::AMOUNT),
             .section          = customSysExSections,
             .address          = 0,
         },

@@ -139,6 +139,12 @@ class Database : public LESSDB
             analogResetOnRelease,
             AMOUNT
         };
+
+        enum class customSysEx_t : uint8_t
+        {
+            byte,
+            AMOUNT
+        };
     };
 
     using LESSDB::read;
@@ -216,6 +222,11 @@ class Database : public LESSDB
     block_t block(Section::touchscreen_t section)
     {
         return block_t::touchscreen;
+    }
+
+    block_t block(Section::customSysEx_t section)
+    {
+        return block_t::customSysEx;
     }
 
     bool     isSignatureValid();
