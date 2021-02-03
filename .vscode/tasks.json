@@ -122,6 +122,18 @@
             }
         },
         {
+            "label": "[FW/Bergamot/Debug] Build",
+            "command": "cd ./src && compiledb -d . make TARGET=bergamot LANG=C DEBUG=1 TYPE=app",
+            "type": "shell",
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
             "label": "[FW/BlackPill401/Debug] Build",
             "command": "cd ./src && compiledb -d . make TARGET=blackpill401 LANG=C DEBUG=1 TYPE=app",
             "type": "shell",
