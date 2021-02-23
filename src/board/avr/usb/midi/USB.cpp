@@ -130,7 +130,7 @@ namespace Board
                 if (!(Endpoint_BytesInEndpoint()))
                     Endpoint_ClearOUT();    //clear the endpoint ready for new packet
 
-#ifdef FW_APP
+#ifndef FW_BOOT
 #ifdef LED_INDICATORS
 #ifdef USB_LINK_MCU
                 //this is actually TX data from target MCU
@@ -166,7 +166,7 @@ namespace Board
 
             MIDI_Device_Flush(&MIDI_Interface);
 
-#ifdef FW_APP
+#ifndef FW_BOOT
 #ifdef LED_INDICATORS
 #ifdef USB_LINK_MCU
             //this is actually RX data from PC
