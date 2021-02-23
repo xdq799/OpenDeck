@@ -100,6 +100,8 @@ extern "C" void SysTick_Handler(void)
         Board::detail::cdc::checkIncomingData();
     }
 #endif
+
+    Board::timer::ms();
 }
 
 namespace Board

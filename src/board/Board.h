@@ -239,4 +239,12 @@ namespace Board
         uint8_t readFlash(uint32_t address);
 #endif
     }    // namespace bootloader
+
+    namespace timer
+    {
+        /// Timer callback called each millisecond.
+        /// Board provides dummy (weak) implementation.
+        /// Can be overriden by user.
+        void ms();
+    }    // namespace timer
 };       // namespace Board

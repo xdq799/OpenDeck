@@ -118,4 +118,11 @@ namespace Board
             //cdc might be unsupported
         }
     }    // namespace bootloader
+
+    namespace timer
+    {
+        __attribute__((weak)) void ms()
+        {
+        }
+    }    // namespace timer
 }    // namespace Board

@@ -52,6 +52,8 @@ ISR(TIMER0_COMPA_vect)
         Board::detail::io::checkIndicators();
 #endif
 #endif
+
+        Board::timer::ms();
     }
 
 #ifdef FW_APP
