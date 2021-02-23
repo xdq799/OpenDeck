@@ -66,7 +66,6 @@ ifneq ($(TYPE),flashgen)
 
     SOURCES += $(shell $(FIND) ./board/common -maxdepth 1 -type f -name "*.cpp")
     SOURCES += $(shell $(FIND) ./board/$(ARCH)/variants/$(MCU_FAMILY)/$(MCU) -maxdepth 1 -type f -regex '.*\.\(s\|c\|cpp\)')
-    SOURCES += board/common/io/Stubs.cpp
 
     ifeq ($(TYPE),boot)
         #bootloader sources
@@ -136,7 +135,6 @@ ifneq ($(TYPE),flashgen)
             SOURCES += $(shell $(FIND) ../modules/sysex/src -maxdepth 1 -type f -name "*.cpp" | sed "s|^\.\./||")
             SOURCES += $(shell $(FIND) ../modules/midi/src -maxdepth 1 -type f -name "*.cpp" | sed "s|^\.\./||")
             SOURCES += $(shell $(FIND) ../modules/dbms/src -maxdepth 1 -type f -name "*.cpp" | sed "s|^\.\./||")
-            SOURCES += board/common/io/Stubs.cpp
 
             ifneq (,$(findstring ANALOG_SUPPORTED,$(DEFINES)))
                 SOURCES += $(shell $(FIND) ./application/io/analog -type f -name "*.cpp")
