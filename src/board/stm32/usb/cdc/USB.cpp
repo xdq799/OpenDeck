@@ -18,18 +18,8 @@ limitations under the License.
 
 #include "board/common/usb/descriptors/Descriptors.h"
 #include "usbd_core.h"
-#include "core/src/general/RingBuffer.h"
-#include "core/src/general/Atomic.h"
-#include "core/src/general/Timing.h"
-#include "core/src/general/StringBuilder.h"
 #include "board/Board.h"
 #include "board/Internal.h"
-
-#ifndef UART_CHANNEL_TOUCHSCREEN
-#define UART_CHANNEL 0
-#else
-#define UART_CHANNEL UART_CHANNEL_TOUCHSCREEN
-#endif
 
 namespace
 {
@@ -38,7 +28,7 @@ namespace
         uint32_t          data[CDC_NOTIFICATION_EPSIZE / 4U]; /* Force 32bits alignment */
         uint8_t           CmdOpCode;
         uint8_t           CmdLength;
-        uint32_t          TxLength;
+        volatile uint32_t TxLength;
         volatile uint32_t TxState;
         volatile uint32_t RxState;
     } cdcData_t;
@@ -215,7 +205,6 @@ namespace
         else
         {
             cdcData.TxState = 0U;
-            ((cdcCallback_t*)pdev->pUserData)->TransmitCplt((uint8_t*)txBuffer, &cdcData.TxLength, epnum);
         }
 
         return (uint8_t)USBD_OK;
@@ -225,11 +214,7 @@ namespace
     {
         uint32_t length = USBD_LL_GetRxDataSize(pdev, epnum);
 
-        /* USB data will be immediately processed, this allow next USB traffic being
-        NAKed till the end of the application Xfer */
-
-        for (uint32_t i = 0; i < length; i++)
-            Board::UART::write(UART_CHANNEL, rxBuffer[i]);
+        Board::USB::onCDCRx((uint8_t*)rxBuffer, length);
 
         (void)USBD_LL_PrepareReceive(pdev, CDC_OUT_EPADDR, (uint8_t*)rxBuffer, CDC_TXRX_EPSIZE);
 
@@ -297,24 +282,26 @@ namespace
 
     int8_t CDC_Control_FS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
     {
-        static uint32_t baudRate = 0;
-
         switch (cmd)
         {
         case CDC_REQ_SetLineEncoding:
         {
-            baudRate = (uint32_t)(pbuf[0] | (pbuf[1] << 8) | (pbuf[2] << 16) | (pbuf[3] << 24));
-            //ignore other parameters
-            Board::UART::init(UART_CHANNEL, baudRate);
+            uint32_t baudRate = (uint32_t)(pbuf[0] | (pbuf[1] << 8) | (pbuf[2] << 16) | (pbuf[3] << 24));
+            Board::USB::onCDCBaudRateSet(baudRate);
         }
         break;
 
         case CDC_REQ_GetLineEncoding:
         {
+            uint32_t baudRate = 0;
+            Board::USB::onCDCBaudRateGet(baudRate);
+
             pbuf[0] = (uint8_t)(baudRate);
             pbuf[1] = (uint8_t)(baudRate >> 8);
             pbuf[2] = (uint8_t)(baudRate >> 16);
             pbuf[3] = (uint8_t)(baudRate >> 24);
+
+            //hardcoded
             pbuf[4] = 0;       //1 stop bit
             pbuf[5] = 0;       //no parity
             pbuf[6] = 0x08;    //8bit word
@@ -328,12 +315,6 @@ namespace
         return USBD_OK;
     }
 
-    int8_t CDC_TransmitCplt_FS(uint8_t* Buf, uint32_t* Len, uint8_t epnum)
-    {
-        cdcData.TxState = 0;
-        return USBD_OK;
-    }
-
     uint8_t USBD_CDC_RegisterInterface(USBD_HandleTypeDef* pdev, cdcCallback_t* fops)
     {
         if (fops == NULL)
@@ -344,6 +325,14 @@ namespace
         pdev->pUserData = fops;
 
         return (uint8_t)USBD_OK;
+    }
+
+    void sendBuffer()
+    {
+        cdcData.TxState = 1;
+
+        hUsbDeviceFS.ep_in[CDC_IN_EPADDR & 0xFU].total_length = cdcData.TxLength;
+        (void)USBD_LL_Transmit(&hUsbDeviceFS, CDC_IN_EPADDR, (uint8_t*)txBuffer, cdcData.TxLength);
     }
 
     USBD_DescriptorsTypeDef DeviceDescriptor = {
@@ -375,12 +364,40 @@ namespace
 
     cdcCallback_t USBD_Interface_fops_FS = {
         CDC_Control_FS,
-        CDC_TransmitCplt_FS
+        NULL
     };
 }    // namespace
 
 namespace Board
 {
+    namespace USB
+    {
+        bool fillCDCTxBuffer(uint8_t value)
+        {
+            //block filling if a transfer is in progress
+            if (!cdcData.TxState)
+                return false;
+
+            txBuffer[cdcData.TxLength++] = value;
+
+            if (cdcData.TxLength >= CDC_TXRX_EPSIZE)
+            {
+                flushCDCTxBuffer();
+            }
+
+            return true;
+        }
+
+        void flushCDCTxBuffer()
+        {
+            if (cdcData.TxLength)
+            {
+                sendBuffer();
+                cdcData.TxLength = 0;
+            }
+        }
+    }    // namespace USB
+
     namespace detail
     {
         namespace setup
@@ -400,38 +417,5 @@ namespace Board
                     Board::detail::errorHandler();
             }
         }    // namespace setup
-
-        namespace cdc
-        {
-            void checkIncomingData()
-            {
-                if (!cdcData.TxState)
-                {
-                    uint32_t size;
-
-                    for (size = 0; size < CDC_TXRX_EPSIZE; size++)
-                    {
-                        uint8_t value;
-
-                        if (Board::UART::read(UART_CHANNEL, value))
-                        {
-                            txBuffer[size] = value;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    if (size)
-                    {
-                        cdcData.TxState = 1;
-
-                        hUsbDeviceFS.ep_in[CDC_IN_EPADDR & 0xFU].total_length = size;
-                        (void)USBD_LL_Transmit(&hUsbDeviceFS, CDC_IN_EPADDR, (uint8_t*)txBuffer, size);
-                    }
-                }
-            }
-        }    // namespace cdc
     }        // namespace detail
 }    // namespace Board

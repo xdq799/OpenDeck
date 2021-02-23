@@ -125,4 +125,19 @@ namespace Board
         {
         }
     }    // namespace timer
+
+    namespace USB
+    {
+        __attribute__((weak)) void onCDCRx(uint8_t* buffer, size_t size)
+        {
+        }
+
+        __attribute__((weak)) void onCDCBaudRateSet(uint32_t baudRate)
+        {
+        }
+
+        __attribute__((weak)) void onCDCBaudRateGet(uint32_t& baudRate)
+        {
+        }
+    }    // namespace USB
 }    // namespace Board

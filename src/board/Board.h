@@ -56,6 +56,27 @@ namespace Board
         /// param [in]: USBMIDIpacket   Pointer to structure holding MIDI data to write.
         /// returns: True if data is available, false otherwise.
         bool writeMIDI(MIDI::USBMIDIpacket_t& USBMIDIpacket);
+
+        /// Writes a single byte of data to outgoing CDC buffer.
+        bool fillCDCTxBuffer(uint8_t data);
+
+        /// Forces sending of all data currently present in outgoing CDC buffer.
+        void flushCDCTxBuffer();
+
+        /// Callback signaling that CDC data has been received.
+        /// Board provides dummy (weak) implementation.
+        /// Can be overriden by user.
+        void onCDCRx(uint8_t* buffer, size_t size);
+
+        /// Callback signaling that USB host has requested changing the baud rate.
+        /// Board provides dummy (weak) implementation.
+        /// Can be overriden by user.
+        void onCDCBaudRateSet(uint32_t baudRate);
+
+        /// Callback signaling that USB host has requested current baud rate.
+        /// Board provides dummy (weak) implementation.
+        /// Can be overriden by user.
+        void onCDCBaudRateGet(uint32_t& baudRate);
     }    // namespace USB
 
     namespace UART
