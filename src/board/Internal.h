@@ -38,7 +38,7 @@ namespace Board
     namespace detail
     {
         /// Specifies incoming or outgoing MIDI data traffic.
-        enum class midiTrafficDirection_t : uint8_t
+        enum class trafficDirection_t : uint8_t
         {
             incoming,
             outgoing
@@ -232,10 +232,10 @@ namespace Board
             /// Checks if digital outputs need to be updated (state and PWM control).
             void checkDigitalOutputs();
 
-            /// Used to indicate that the MIDI event has occured using built-in LEDs on board.
-            /// param [source]     Source of MIDI data. See MIDI::interface_t enumeration.
-            /// param [direction]  Direction of MIDI data. See midiTrafficDirection_t enumeration.
-            void indicateMIDItraffic(MIDI::interface_t source, midiTrafficDirection_t direction);
+            /// Used to indicate that the traffic event has occured using built-in LEDs on board.
+            /// param [source]     Source of data. See MIDI::interface_t enumeration.
+            /// param [direction]  Direction of data. See trafficDirection_t enumeration.
+            void indicateTraffic(MIDI::interface_t source, trafficDirection_t direction);
 
             /// Checks if indicator LEDs need to be turned on or off.
             void checkIndicators();

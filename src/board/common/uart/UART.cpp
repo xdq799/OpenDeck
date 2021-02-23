@@ -177,7 +177,7 @@ namespace Board
 #ifndef USB_LINK_MCU
 #ifdef FW_APP
 #ifdef LED_INDICATORS
-                        Board::detail::io::indicateMIDItraffic(MIDI::interface_t::din, Board::detail::midiTrafficDirection_t::incoming);
+                        Board::detail::io::indicateTraffic(MIDI::interface_t::din, Board::detail::trafficDirection_t::incoming);
 #endif
 #endif
 #endif
@@ -191,8 +191,8 @@ namespace Board
 
 #ifdef FW_APP
 #ifdef LED_INDICATORS
-                        Board::detail::io::indicateMIDItraffic(MIDI::interface_t::din, Board::detail::midiTrafficDirection_t::outgoing);
-                        Board::detail::io::indicateMIDItraffic(MIDI::interface_t::din, Board::detail::midiTrafficDirection_t::incoming);
+                        Board::detail::io::indicateTraffic(MIDI::interface_t::din, Board::detail::trafficDirection_t::outgoing);
+                        Board::detail::io::indicateTraffic(MIDI::interface_t::din, Board::detail::trafficDirection_t::incoming);
 #endif
 #endif
                     }
@@ -206,7 +206,7 @@ namespace Board
 #ifndef USB_LINK_MCU
 #ifdef FW_APP
 #ifdef LED_INDICATORS
-                    Board::detail::io::indicateMIDItraffic(MIDI::interface_t::din, Board::detail::midiTrafficDirection_t::outgoing);
+                    Board::detail::io::indicateTraffic(MIDI::interface_t::din, Board::detail::trafficDirection_t::outgoing);
 #endif
 #endif
 #endif
@@ -245,7 +245,7 @@ namespace Board
 
 #ifdef FW_APP
 #ifdef LED_INDICATORS
-            Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::outgoing);
+            Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::outgoing);
 #endif
 #endif
             return true;
@@ -261,7 +261,7 @@ namespace Board
                 {
 #ifdef FW_APP
 #ifdef LED_INDICATORS
-                    Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::incoming);
+                    Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::incoming);
 #endif
 #endif
 

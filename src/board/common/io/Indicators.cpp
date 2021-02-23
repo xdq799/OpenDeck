@@ -60,12 +60,12 @@ namespace Board
                 }
             }
 
-            void indicateMIDItraffic(MIDI::interface_t source, midiTrafficDirection_t direction)
+            void indicateTraffic(MIDI::interface_t source, trafficDirection_t direction)
             {
                 switch (source)
                 {
                 case MIDI::interface_t::din:
-                    if (direction == midiTrafficDirection_t::incoming)
+                    if (direction == trafficDirection_t::incoming)
                     {
                         INT_LED_ON(LED_MIDI_IN_DIN_PORT, LED_MIDI_IN_DIN_PIN);
                         midiInDINtimeout = MIDI_INDICATOR_TIMEOUT;
@@ -78,7 +78,7 @@ namespace Board
                     break;
 
                 case MIDI::interface_t::usb:
-                    if (direction == midiTrafficDirection_t::incoming)
+                    if (direction == trafficDirection_t::incoming)
                     {
                         INT_LED_ON(LED_MIDI_IN_USB_PORT, LED_MIDI_IN_USB_PIN);
                         midiInUSBtimeout = MIDI_INDICATOR_TIMEOUT;

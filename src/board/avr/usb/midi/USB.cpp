@@ -134,9 +134,9 @@ namespace Board
 #ifdef LED_INDICATORS
 #ifdef USB_LINK_MCU
                 //this is actually TX data from target MCU
-                Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::outgoing);
+                Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::outgoing);
 #else
-                Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::incoming);
+                Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::incoming);
 #endif
 #endif
 #endif
@@ -170,9 +170,9 @@ namespace Board
 #ifdef LED_INDICATORS
 #ifdef USB_LINK_MCU
             //this is actually RX data from PC
-            Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::incoming);
+            Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::incoming);
 #else
-            Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::outgoing);
+            Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::outgoing);
 #endif
 #endif
 #endif

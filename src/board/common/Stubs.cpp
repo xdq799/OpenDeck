@@ -82,7 +82,7 @@ namespace Board
             {
             }
 
-            __attribute__((weak)) void indicateMIDItraffic(MIDI::interface_t source, midiTrafficDirection_t direction)
+            __attribute__((weak)) void indicateTraffic(MIDI::interface_t source, trafficDirection_t direction)
             {
             }
 

@@ -205,7 +205,7 @@ namespace Board
             {
 #ifdef FW_APP
 #ifdef LED_INDICATORS
-                Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::incoming);
+                Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::incoming);
 #endif
 #endif
             }
@@ -226,7 +226,7 @@ namespace Board
             USBD_LL_Transmit(&hUsbDeviceFS, MIDI_STREAM_IN_EPADDR, (uint8_t*)&USBMIDIpacket, 4);
 
 #ifdef LED_INDICATORS
-            Board::detail::io::indicateMIDItraffic(MIDI::interface_t::usb, Board::detail::midiTrafficDirection_t::outgoing);
+            Board::detail::io::indicateTraffic(MIDI::interface_t::usb, Board::detail::trafficDirection_t::outgoing);
 #endif
 
             return true;
